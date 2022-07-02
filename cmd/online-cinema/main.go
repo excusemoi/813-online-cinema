@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"813-online-cinema/pkg/services/db"
+	"813-online-cinema/pkg/services/db/repository/postgres"
+	"fmt"
+)
 
 func main() {
-	fmt.Println("813-online-cinema")
+	rep := postgres.Repository{}
+	if err := rep.InitRepository(&db.Cfg); err != nil {
+		fmt.Println(err)
+	}
 }

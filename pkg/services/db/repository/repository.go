@@ -1,13 +1,14 @@
 package repository
 
-import "github.com/jackc/pgx"
+import (
+	"813-online-cinema/pkg/services/db/config"
+	pb "813-online-cinema/pkg/services/db/proto"
+	"context"
+)
 
 type Repository interface {
-	//authorizeUser(login, password string) (bool, error)
-	//getUserMovieList(id int64) ([]Movie, error)
-	//getMovieStats(id int64) (MovieStats, error)
-}
-
-type PostgresRepository struct { //should implement interface above methods
-	conn *pgx.Conn
+	IsUserAuthorized(ctx context.Context, info *pb.UserAuthInfo) (*pb.UserAuthResponse, error)
+	GetUserMovieList(ctx context.Context, id *pb.ID) (*pb.MovieList, error)
+	GetMovieStats(ctx context.Context, id *pb.ID) (*pb.MovieStats, error)
+	InitRepository(cfg *config.Config) error
 }
