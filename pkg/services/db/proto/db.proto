@@ -1,9 +1,98 @@
 syntax = "proto3";
-
+import "google/protobuf/any.proto";
 package db.proto;
 
 option go_package = "./";
 
+message Empty {
+
+}
+message ResultReply {
+  bool result=1;
+  string info=2;
+}
+
+enum Table {
+  PROFILE=0;
+  PROFILE_STATUS=1;
+  PROFILE_MOVIE=2;
+  MOVIE=3;
+  MOVIE_STATS=4;
+}
+enum Field {
+  ID=0;
+  NAME=1;
+  SURNAME=2;
+  LOGIN=3;
+  HASHED_PASSWORD=4;
+  PROFILE_ID=5;
+  MOVIE_ID=6;
+  MAGNET_LINK=7;
+  VIEWS_COUNT=8;
+  LIKES_COUNT=9;
+  DISLIKES_COUNT=10;
+}
+
+message Profile {
+  int64 id=1;
+  string name=2;
+  string surname=3;
+  string login=4;
+  bytes hashed_password=5;
+  ProfileStatus profile_status=6;
+}
+message ProfileStatus {
+  int64 id=1;
+  string name=2;
+}
+message Profile_Movie {
+  int64 id=1;
+  Profile profile=2;
+  Movie movie=3;
+}
+message Movie {
+  int64 id=1;
+  string magnet_link=2;
+  int64 views_count=3;
+  int64 likes_count=4;
+  int64 dislikes_count=5;
+}
+
+message SelectRequest {
+  Table select_from=1;
+  Field select_by=2;
+  optional int64 integer=3;
+  optional bytes bytes=4;
+  optional string str=5;
+}
+message SelectReply {
+  ResultReply result=1;
+  repeated google.protobuf.Any entry=2;
+}
+message InsertRequest {
+  Table insert_to=1;
+  google.protobuf.Any entry=2;
+}
+message UpdateRequest {
+  Table update_in=1;
+  google.protobuf.Any entry=2;
+}
+message DeleteRequest {
+  Table delete_from=1;
+  Field delete_by=2;
+  optional int64 integer=3;
+  optional bytes bytes=4;
+  optional string str=5;
+}
+
+service CinemaDatabase {
+  rpc selectFromDatabase(SelectRequest) returns(SelectReply);
+  rpc insertToDatabase(InsertRequest) returns(ResultReply);
+  rpc updateInDatabase(UpdateRequest) returns(ResultReply);
+  rpc deleteFromDatabase(DeleteRequest) returns(ResultReply);
+}
+
+/*
 service Db {
   rpc IsUserAuthorized(UserAuthInfo) returns (UserAuthResponse) {}
   rpc GetUserMovieList(ID) returns (MovieList) {}
@@ -36,4 +125,4 @@ message UserAuthInfo {
 
 message UserAuthResponse {
   bool authorized = 1;
-}
+}*/
