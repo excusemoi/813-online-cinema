@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package db.proto;
+
+option go_package = "./";
+
+service Db {
+  rpc IsUserAuthorized(UserAuthInfo) returns (UserAuthResponse) {}
+  rpc GetUserMovieList(ID) returns (MovieList) {}
+  rpc GetMovieStats(ID) returns (MovieStats) {}
+}
+
+message ID {
+  string id = 1;
+}
+
+message Movie {
+  string id = 1;
+  string torrentUrl = 2;
+}
+
+message MovieStats {
+  string id = 1;
+  string views = 2;
+  string reviews = 3;
+}
+
+message MovieList {
+  repeated Movie movies = 1;
+}
+
+message UserAuthInfo {
+  string login = 1;
+  string password = 2;
+}
+
+message UserAuthResponse {
+  bool authorized = 1;
+}
